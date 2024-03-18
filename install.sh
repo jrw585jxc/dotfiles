@@ -26,10 +26,43 @@ if [[ "$(id -u)" -eq 0 ]]; then
         fi
 
 
+git config --global user.name "jrw585jxc"
+git config --global user.email "jrw585jxc@proton.me"
+git config --global core.editor "vim"
+git config --global core.excludesfile ~/.gitignore_global
+git config --global help.autocorrect 1
+cp ~/.gitconfig ~/dotfiles/.gitconfig
+
+cat <<EOT >> ~/.bashrc
+alias ll='ls -alF'
+alias gs='git status'
+EOT
+cp ~/.bashrc ~/dotfiles/.bashrc
+
+# Check if ~/.ssh folder exists, if not create it
+mkdir -p ~/.ssh
+
+# Copy authorized_keys to the repository and symlink it
+cp ~/.ssh/authorized_keys ~/dotfiles/authorized_keys
+ln -sf ~/dotfiles/authorized_keys ~/.ssh/authorized_keys
+
+# Create ssh config and symlink it
+cat <<EOT > ~/.ssh/config
+Host fry.cs.wright.edu
+    Hostname fry.cs.wright.edu
+    User your_username_here
+EOT
+ln -sf ~/dotfiles/config ~/.ssh/config
+
+# Install Vundle for vim
+git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+mkdir -p ~/.vim/colors
+wget https://raw.githubusercontent.com/morhetz/gruvbox/master/colors/gruvbox.vim -O ~/.vim/colors/gruvbox.vim
+
+# Install a vim improvement plugin
+vim +PluginInstall +qall
 
 
-
-                # install packages with apt
 else
         echo "Script is not running as root, exiting..." 1>&2
         exit 1
